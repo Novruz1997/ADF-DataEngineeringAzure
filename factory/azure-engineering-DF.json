@@ -1,0 +1,9 @@
+{
+	"name": "azure-engineering-DF",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "52830cdb-7455-4a42-8078-d109bc1acfed",
+		"tenantId": "a60c67ce-db3b-480d-a619-909229274902"
+	}
+}

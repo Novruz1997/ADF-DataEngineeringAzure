@@ -1,0 +1,25 @@
+{
+	"name": "Sink_Blob_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Sink_Blob_Storage_LK",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "emp.txt",
+				"folderPath": "datafiles/employees",
+				"container": "development"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
