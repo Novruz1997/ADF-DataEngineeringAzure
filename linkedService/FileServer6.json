@@ -1,0 +1,17 @@
+{
+	"name": "FileServer6",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\Users\\Novruz's_MSI\\Desktop\\Azure-July\\ADE-20220829T195603Z-001\\datasets\\employee_lecture",
+			"userId": "Novruz's_MSI",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJiOWZkYzQxMS1kZmM2LTQ5NDctYTJjOS1jYzhjMTkyOTU0NzYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "SelfHostedIR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

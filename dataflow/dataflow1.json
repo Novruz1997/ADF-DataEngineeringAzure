@@ -1,0 +1,63 @@
+{
+	"name": "dataflow1",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText13",
+						"type": "DatasetReference"
+					},
+					"name": "GetFromAzureBlob"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable5",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [],
+			"scriptLines": [
+				"source(output(",
+				"          empId as short,",
+				"          eN as string,",
+				"          empSalary as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false,",
+				"     rowUrlColumn: 'demo',",
+				"     wildcardPaths:['datafiles/employees/*.txt']) ~> GetFromAzureBlob",
+				"GetFromAzureBlob sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          employeeId as integer,",
+				"          empName as string,",
+				"          employeeSalary as decimal(12,2),",
+				"          departmentId as integer,",
+				"          fname as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          employeeId = empId,",
+				"          empName = eN,",
+				"          employeeSalary = empSalary,",
+				"          fname = demo",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

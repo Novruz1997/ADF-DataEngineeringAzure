@@ -1,0 +1,133 @@
+{
+	"name": "dataflow3",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText14",
+						"type": "DatasetReference"
+					},
+					"name": "FactInternetSales"
+				},
+				{
+					"dataset": {
+						"referenceName": "DelimitedText15",
+						"type": "DatasetReference"
+					},
+					"name": "DimDate"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable8",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "join1"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "surrogateKey1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          ProductKey as string,",
+				"          OrderDateKey as string,",
+				"          DueDateKey as string,",
+				"          ShipDateKey as string,",
+				"          CustomerKey as string,",
+				"          PromotionKey as string,",
+				"          CurrencyKey as string,",
+				"          SalesTerritoryKey as string,",
+				"          SalesOrderNumber as string,",
+				"          SalesOrderLineNumber as string,",
+				"          RevisionNumber as string,",
+				"          OrderQuantity as string,",
+				"          UnitPrice as string,",
+				"          ExtendedAmount as string,",
+				"          UnitPriceDiscountPct as string,",
+				"          DiscountAmount as string,",
+				"          ProductStandardCost as string,",
+				"          TotalProductCost as string,",
+				"          SalesAmount as double,",
+				"          TaxAmt as string,",
+				"          Freight as string,",
+				"          CarrierTrackingNumber as string,",
+				"          CustomerPONumber as string,",
+				"          OrderDate as string,",
+				"          DueDate as string,",
+				"          ShipDate as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> FactInternetSales",
+				"source(output(",
+				"          DateKey as string,",
+				"          FullDateAlternateKey as string,",
+				"          DayNumberOfWeek as string,",
+				"          EnglishDayNameOfWeek as string,",
+				"          SpanishDayNameOfWeek as string,",
+				"          FrenchDayNameOfWeek as string,",
+				"          DayNumberOfMonth as string,",
+				"          DayNumberOfYear as string,",
+				"          WeekNumberOfYear as string,",
+				"          EnglishMonthName as string,",
+				"          SpanishMonthName as string,",
+				"          FrenchMonthName as string,",
+				"          MonthNumberOfYear as integer,",
+				"          CalendarQuarter as string,",
+				"          CalendarYear as string,",
+				"          CalendarSemester as string,",
+				"          FiscalQuarter as string,",
+				"          FiscalYear as string,",
+				"          FiscalSemester as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> DimDate",
+				"FactInternetSales, DimDate join(DueDateKey == DateKey,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 aggregate(groupBy(MonthNumberOfYear),",
+				"     Sales = round(avg(SalesAmount), 2)) ~> aggregate1",
+				"aggregate1 keyGenerate(output(SK_ID as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          SalesMonth as integer,",
+				"          SK_ID as integer,",
+				"          SaleAmount as decimal(12,2)",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['Set Identity_Insert aggSales on;'],",
+				"     postSQLs:['Set Identity_Insert aggSales off;'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          SalesMonth = MonthNumberOfYear,",
+				"          SK_ID,",
+				"          SaleAmount = Sales",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

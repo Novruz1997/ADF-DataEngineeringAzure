@@ -1,0 +1,39 @@
+{
+	"name": "AzureSqlTable6",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase6",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "transactionId",
+				"type": "varchar"
+			},
+			{
+				"name": "storeId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LineOfBusiness",
+				"type": "varchar"
+			},
+			{
+				"name": "FileFull",
+				"type": "varchar"
+			},
+			{
+				"name": "FileShort",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "demoCust"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

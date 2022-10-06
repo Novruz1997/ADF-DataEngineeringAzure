@@ -1,0 +1,100 @@
+{
+	"name": "dataflow2",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Parquet1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable7",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				},
+				{
+					"name": "surrogateKey1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          TransactionId as string,",
+				"          CustomerId as integer,",
+				"          ProductId as short,",
+				"          Quantity as byte,",
+				"          Price as decimal(38,18),",
+				"          TotalAmount as decimal(38,18),",
+				"          TransactionDate as integer,",
+				"          ProfitAmount as decimal(38,18),",
+				"          Hour as byte,",
+				"          Minute as byte,",
+				"          StoreId as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     rowUrlColumn: 'fileName',",
+				"     format: 'parquet',",
+				"     wildcardPaths:['samplefiles/parquet/*.parquet']) ~> source1",
+				"source1 derive(LoB = \"Reporting\",",
+				"          fileN = split(fileName, '/')[4]) ~> derivedColumn1",
+				"derivedColumn1 select(mapColumn(",
+				"          TransactionId,",
+				"          StoreId,",
+				"          fileName,",
+				"          LoB,",
+				"          fileN",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 keyGenerate(output(SK_ID as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> surrogateKey1",
+				"surrogateKey1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          transactionId as string,",
+				"          storeId as integer,",
+				"          LineOfBusiness as string,",
+				"          FileFull as string,",
+				"          FileShort as string,",
+				"          SK_ID as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     preSQLs:['Set Identity_Insert demoCust on;'],",
+				"     postSQLs:['Set Identity_Insert demoCust off;'],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          transactionId = TransactionId,",
+				"          storeId = StoreId,",
+				"          LineOfBusiness = LoB,",
+				"          FileFull = fileName,",
+				"          FileShort = fileN,",
+				"          SK_ID",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

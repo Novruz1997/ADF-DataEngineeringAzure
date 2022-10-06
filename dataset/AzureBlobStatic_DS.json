@@ -1,0 +1,24 @@
+{
+	"name": "AzureBlobStatic_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStatic_LK",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": "datafiles/employees",
+				"container": "development"
+			},
+			"columnDelimiter": "|",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

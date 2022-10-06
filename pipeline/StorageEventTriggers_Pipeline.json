@@ -1,0 +1,132 @@
+{
+	"name": "StorageEventTriggers_Pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy - From Blob to Azure SQL DB",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobStorageReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "empId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "id",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							},
+							{
+								"source": {
+									"name": "empName",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "empName",
+									"type": "String",
+									"physicalType": "varchar"
+								}
+							},
+							{
+								"source": {
+									"name": "empSalary",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "empSal",
+									"type": "Decimal",
+									"physicalType": "decimal",
+									"scale": 2,
+									"precision": 12
+								}
+							},
+							{
+								"source": {
+									"name": "deptId",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "deptId",
+									"type": "Int32",
+									"physicalType": "int"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "DS_Blob1",
+						"type": "DatasetReference",
+						"parameters": {
+							"fname": {
+								"value": "@pipeline().parameters.Pfname",
+								"type": "Expression"
+							},
+							"folderName": {
+								"value": "@pipeline().parameters.PFolderName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DS_AzureSQLDBemp",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"Pfname": {
+				"type": "string"
+			},
+			"PFolderName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2022-09-21T22:40:00Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

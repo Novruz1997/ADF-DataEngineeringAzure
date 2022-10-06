@@ -1,0 +1,49 @@
+{
+	"name": "AzureSqlTable19",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LK_AzureSQLDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "srcTable",
+				"type": "varchar"
+			},
+			{
+				"name": "desTable",
+				"type": "varchar"
+			},
+			{
+				"name": "srcColumn",
+				"type": "varchar"
+			},
+			{
+				"name": "watervalue",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "StoredProcedure",
+				"type": "varchar"
+			},
+			{
+				"name": "table_type",
+				"type": "varchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "WaterMarkTable"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

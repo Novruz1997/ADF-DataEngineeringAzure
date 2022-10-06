@@ -1,0 +1,102 @@
+{
+	"name": "dataflow7",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Json1",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable12",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "flatten1"
+				},
+				{
+					"name": "flatten2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          first_name as string,",
+				"          last_name as string,",
+				"          location as string,",
+				"          Children as (name as string, age as integer)[],",
+				"          social_media as (description as string, link as string)[]",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     documentForm: 'arrayOfDocuments') ~> source1",
+				"source1 foldDown(unroll(Children),",
+				"     mapColumn(",
+				"          first_name,",
+				"          last_name,",
+				"          location,",
+				"          Children,",
+				"          social_media,",
+				"          name = Children.name,",
+				"          age = Children.age",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten1",
+				"flatten1 foldDown(unroll(social_media),",
+				"     mapColumn(",
+				"          first_name,",
+				"          last_name,",
+				"          location,",
+				"          social_media = social_media.description,",
+				"          name,",
+				"          age,",
+				"          description = social_media.description,",
+				"          link = social_media.link",
+				"     ),",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> flatten2",
+				"flatten2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Location as string,",
+				"          Children as string,",
+				"          name as string,",
+				"          age as integer,",
+				"          socialMedia as string,",
+				"          description as string,",
+				"          link as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          FirstName = first_name,",
+				"          LastName = last_name,",
+				"          Location = location,",
+				"          name,",
+				"          age,",
+				"          description,",
+				"          link",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

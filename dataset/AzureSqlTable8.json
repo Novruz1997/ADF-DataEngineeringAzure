@@ -1,0 +1,34 @@
+{
+	"name": "AzureSqlTable8",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LK_AzureSQLDB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "SalesMonth",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SK_ID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "SaleAmount",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 2
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "aggSales"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

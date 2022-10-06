@@ -1,0 +1,38 @@
+{
+	"name": "Azure_Sql_DS_Static",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Azure_SQL_LK",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "empName",
+				"type": "varchar"
+			},
+			{
+				"name": "empSal",
+				"type": "decimal",
+				"precision": 12,
+				"scale": 2
+			},
+			{
+				"name": "deptId",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "stgEmp"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

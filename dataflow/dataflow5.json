@@ -1,0 +1,89 @@
+{
+	"name": "dataflow5",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText22",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable9",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "parse1"
+				},
+				{
+					"name": "parse2"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          empId as short,",
+				"          empName as string,",
+				"          skills as string,",
+				"          address as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     wildcardPaths:['Json10/ParseTransformation.txt']) ~> source1",
+				"source1 parse(sr = skills ? (a as string,",
+				"          b as string,",
+				"          c as string),",
+				"     format: 'delimited',",
+				"     columnNamesAsHeader: false,",
+				"     columnDelimiter: '|',",
+				"     nullValue: '') ~> parse1",
+				"parse1 parse(lkk = address ? (city as string,",
+				"          country as string),",
+				"     format: 'json',",
+				"     documentForm: 'singleDocument') ~> parse2",
+				"parse2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          empId as integer,",
+				"          empName as string,",
+				"          skills as string,",
+				"          address as string,",
+				"          city as string,",
+				"          country as string,",
+				"          skill1 as string,",
+				"          skill2 as string,",
+				"          skill3 as string",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          empId,",
+				"          empName,",
+				"          skills,",
+				"          address,",
+				"          city = lkk.city,",
+				"          country = lkk.country,",
+				"          skill1 = sr.a,",
+				"          skill2 = sr.b,",
+				"          skill3 = sr.c",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

@@ -1,0 +1,44 @@
+{
+	"name": "AzureSqlTable7",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase7",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "transactionId",
+				"type": "nvarchar"
+			},
+			{
+				"name": "storeId",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "LineOfBusiness",
+				"type": "varchar"
+			},
+			{
+				"name": "FileFull",
+				"type": "varchar"
+			},
+			{
+				"name": "FileShort",
+				"type": "varchar"
+			},
+			{
+				"name": "SK_ID",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "demoCust"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,28 @@
+{
+	"name": "StorageEvent_TR_1",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "StorageEventTriggers_Pipeline",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"Pfname": "@triggerBody().fileName",
+					"PFolderName": "@triggerBody().folderPath"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/development/blobs/",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/2b40bef9-135e-4c3e-9300-8ca8b4f22931/resourceGroups/azure-data-engineering/providers/Microsoft.Storage/storageAccounts/azureblobengineering",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
